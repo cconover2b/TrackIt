@@ -1,3 +1,4 @@
+// app/api/stats/route.ts
 import { connectToDB } from "@/lib/db"
 import { TicketModel } from "@/schemas/ticket"
 

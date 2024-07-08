@@ -1,3 +1,4 @@
+// schemas/user.ts
 import { User } from "@/types";
 import { Schema, models, model } from "mongoose";
 

@@ -1,3 +1,4 @@
+// types/index.ts
 export type Ticket = {
     id: number,
     submitterName: string

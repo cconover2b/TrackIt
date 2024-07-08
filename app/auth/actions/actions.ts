@@ -1,3 +1,4 @@
+// app/auth/actions/actions.ts
 'use server'
 
 import { hashPasswrod } from '@/lib/utils'

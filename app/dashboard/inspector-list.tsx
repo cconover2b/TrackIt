@@ -1,3 +1,4 @@
+// app/dashboard/inspector-list.tsx
 'use client'
 
 import { Button } from '@/components/ui/button'

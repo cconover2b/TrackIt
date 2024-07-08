@@ -1,3 +1,4 @@
+// app/api/user/route.ts
 import { connectToDB } from "@/lib/db";
 import { UserModel } from "@/schemas/user";
 

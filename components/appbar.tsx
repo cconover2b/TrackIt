@@ -1,3 +1,4 @@
+// components/appbar.tsx
 'use client'
 
 import { signOut, useSession } from 'next-auth/react'

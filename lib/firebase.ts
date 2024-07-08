@@ -1,3 +1,4 @@
+// lib/firebase.ts
 import { getApps, initializeApp } from "firebase/app"
 import { getStorage, ref } from "firebase/storage"
 

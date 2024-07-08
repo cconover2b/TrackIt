@@ -1,3 +1,4 @@
+// app/dashboard/ticket-table.tsx
 import { buildUrl } from '@/lib/utils'
 import { Ticket } from '@/types'
 import React from 'react'

@@ -1,4 +1,5 @@
-"use client"
+// components/ui/command.tsx
+'use client'
 
 import * as React from "react"
 import { DialogProps } from "@radix-ui/react-dialog"

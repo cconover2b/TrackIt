@@ -1,3 +1,4 @@
+// schemas/ticket.ts
 import { Ticket, TicketStatus } from "@/types";
 import mongoose, { Schema, model, models } from "mongoose";
 

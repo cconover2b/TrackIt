@@ -1,3 +1,4 @@
+// app/dashboard/stats.tsx
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { buildUrl } from '@/lib/utils'
 import React from 'react'

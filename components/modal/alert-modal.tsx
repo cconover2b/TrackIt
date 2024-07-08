@@ -1,3 +1,4 @@
+// components/modal/alert-modal.tsx
 import React from 'react'
 import {
     AlertDialog,

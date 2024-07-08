@@ -1,4 +1,4 @@
-
+// app/auth/register/page.tsx
 import React from 'react'
 import Link from 'next/link'
 import RegistrationForm from './registrationForm'

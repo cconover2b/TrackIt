@@ -1,4 +1,5 @@
-"use client"
+// app/dashboard/row-actions.tsx
+'use client'
 
 import { Button } from '@/components/ui/button'
 import { Ticket, TicketStatus, User } from '@/types'

@@ -1,3 +1,4 @@
+// app/auth/register/registrationForm.tsx
 'use client'
 
 import React from 'react'

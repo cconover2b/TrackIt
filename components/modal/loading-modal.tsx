@@ -1,4 +1,4 @@
-
+// components/modal/loading-modal.tsx
 import {
     AlertDialog,
     AlertDialogContent,

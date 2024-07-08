@@ -1,3 +1,4 @@
+// app/dashboard/layout.tsx
 import Appbar from '@/components/appbar'
 import React from 'react'
 import AuthContext from './auth-context'

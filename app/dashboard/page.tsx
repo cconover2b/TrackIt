@@ -1,3 +1,4 @@
+// app/dashboard/page.tsx
 import React from 'react'
 import Stats from './stats'
 import TicketTable from './ticket-table'

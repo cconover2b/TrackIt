@@ -1,3 +1,4 @@
+// components/modal/photo-modal.tsx
 import React from 'react'
 import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogFooter } from '../ui/alert-dialog'
 import Image from 'next/image'
