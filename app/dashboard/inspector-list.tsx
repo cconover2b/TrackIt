@@ -1,4 +1,5 @@
 // app/dashboard/inspector-list.tsx
+// Updated Code with Additional Safeguards and Logging
 'use client'
 
 import { Button } from '@/components/ui/button'
@@ -6,7 +7,6 @@ import { Combobox } from '@/components/ui/combobox'
 import { Sheet, SheetContent, SheetFooter, SheetHeader, SheetTitle } from '@/components/ui/sheet'
 import { User } from '@/types'
 import React, { useState } from 'react'
-
 
 function InspectorList({
     open,
@@ -21,6 +21,7 @@ function InspectorList({
     const [inspector, setInspector] = useState<User>()
 
     const handleInspectorSelect = (user: User) => {
+        console.log('Selected inspector:', user) // Log selected inspector
         setInspector(user)
     }
 
@@ -29,9 +30,15 @@ function InspectorList({
     }
 
     const handleAssign = () => {
-        onInspectorAssign(inspector as User)
-        setOpen(false)
+        if (inspector) {
+            console.log('Assigning inspector:', inspector) // Log inspector being assigned
+            onInspectorAssign(inspector)
+            setOpen(false)
+        } else {
+            console.error('No inspector selected') // Log error if no inspector is selected
+        }
     }
+
     return (
         <Sheet open={open} onOpenChange={handleOpenChange}>
             <SheetContent>

@@ -1,4 +1,5 @@
 // components/ui/combobox.tsx
+// Updated Code with Additional Safeguards and Logging
 'use client'
 
 import * as React from "react"

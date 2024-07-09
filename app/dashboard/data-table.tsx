@@ -1,16 +1,15 @@
 // app/dashboard/data-table.tsx
-'use client'
+'use client';
 
-
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 import {
     ColumnDef,
     ColumnFiltersState,
@@ -23,40 +22,37 @@ import {
     getPaginationRowModel,
     getSortedRowModel,
     useReactTable
-} from "@tanstack/react-table"
-import { useRouter } from "next/navigation"
-import { useState } from "react"
-import { BsChevronDown } from 'react-icons/bs'
-import { Ticket, TicketStatus } from "@/types"
-import { buildUrl } from "@/lib/utils"
-import { toast } from 'react-toastify'
-import PhotoModal from "@/components/modal/photo-modal"
-import LoadingModal from "@/components/modal/loading-modal"
+} from "@tanstack/react-table";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { BsChevronDown } from 'react-icons/bs';
+import { Ticket, TicketStatus } from "@/types";
+import { buildUrl } from "@/lib/utils";
+import { toast } from 'react-toastify';
+import PhotoModal from "@/components/modal/photo-modal";
+import LoadingModal from "@/components/modal/loading-modal";
 
 declare module '@tanstack/react-table' {
     interface TableMeta<TData extends RowData> {
-        photoThumbClicked: (rowIndex: string) => void
+        photoThumbClicked: (rowIndex: string) => void;
     }
 }
 
 interface DataTableProps<TData, TValue> {
-    columns: ColumnDef<TData, TValue>[],
-    data: TData[]
+    columns: ColumnDef<TData, TValue>[];
+    data: TData[];
 }
-export function DataTable<TData, TValue>({
-    columns,
-    data
-}: DataTableProps<TData, TValue>) {
 
-    const [sorting, setSorting] = useState<SortingState>([])
-    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
-    const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
-    const router = useRouter()
-    const [loading, setLoading] = useState(false)
+export function DataTable<TData extends RowData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
+    const [sorting, setSorting] = useState<SortingState>([]);
+    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+    const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
+    const router = useRouter();
+    const [loading, setLoading] = useState(false);
     const [photoModal, setPhotoModal] = useState({
         open: false,
         url: ''
-    })
+    });
 
     const table = useReactTable({
         data,
@@ -76,26 +72,27 @@ export function DataTable<TData, TValue>({
         meta: {
             photoThumbClicked(rowIndex) {
                 const photo: string =
-                    table.getRowModel().rows.at(Number.parseInt(rowIndex))?.getValue('photo') as string
+                    table.getRowModel().rows.at(Number.parseInt(rowIndex))?.getValue('photo') as string;
                 setPhotoModal({
                     open: true,
                     url: photo
-                })
+                });
             }
         }
-    })
+    });
 
     const handleMarkComplete = async () => {
-        const rowIndex = Object.keys(rowSelection)
-        const ticketsToMark: Ticket[] = []
+        const rowIndex = Object.keys(rowSelection);
+        const ticketsToMark: Ticket[] = [];
 
         try {
-
-            setLoading(true)
+            setLoading(true);
             rowIndex.forEach(index => {
-                const row = table.getRowModel().rows.at(Number.parseInt(index))
-                ticketsToMark.push(row?.original as Ticket)
-            })
+                const row = table.getRowModel().rows.at(Number.parseInt(index));
+                if (row) {
+                    ticketsToMark.push(row.original as Ticket);
+                }
+            });
 
             // fire a http call
             await fetch(buildUrl('ticket/bulk'), {
@@ -104,50 +101,50 @@ export function DataTable<TData, TValue>({
                     tickets: ticketsToMark,
                     status: TicketStatus.COMPLETED
                 })
-            })
+            });
 
-            setLoading(false)
-            toast.success("Tickets updated")
-            setRowSelection({})
-            router.refresh()
+            setLoading(false);
+            toast.success("Tickets updated");
+            setRowSelection({});
+            router.refresh();
         } catch (error) {
-            setLoading(false)
-            console.log(error)
+            setLoading(false);
+            console.log(error);
         }
-    }
+    };
 
     const handleDelete = async () => {
         const rowIndex = Object.keys(rowSelection);
         const ticketsToDelete: Ticket[] = [];
 
         try {
-
-            setLoading(true)
+            setLoading(true);
             rowIndex.forEach(index => {
-                const row = table.getRowModel().rows.at(Number.parseInt(index))
-                ticketsToDelete.push(row?.original as Ticket)
-            })
+                const row = table.getRowModel().rows.at(Number.parseInt(index));
+                if (row) {
+                    ticketsToDelete.push(row.original as Ticket);
+                }
+            });
 
             await fetch('ticket/bulk', {
                 method: 'DELETE',
                 body: JSON.stringify({
                     tickets: ticketsToDelete
                 })
-            })
+            });
 
-            setLoading(false)
-            toast.success("tickets deleted")
-            setRowSelection({})
-
-            router.refresh()
+            setLoading(false);
+            toast.success("Tickets deleted");
+            setRowSelection({});
+            router.refresh();
         } catch (error) {
-            setLoading(false)
-            console.log(error)
+            setLoading(false);
+            console.log(error);
         }
-    }
+    };
+
     return (
         <div>
-
             {/* toolbar */}
             <div className="flex items-center py-4">
                 {
@@ -198,7 +195,7 @@ export function DataTable<TData, TValue>({
                                                             )
                                                     }
                                                 </TableHead>
-                                            )
+                                            );
                                         })
                                     }
                                 </TableRow>
@@ -220,7 +217,6 @@ export function DataTable<TData, TValue>({
                                         ))}
                                     </TableRow>
                                 ))
-
                             ) : (
                                 <TableRow>
                                     <TableCell colSpan={columns.length} className="h-24 text-center">
@@ -232,11 +228,11 @@ export function DataTable<TData, TValue>({
                     </TableBody>
                 </Table>
             </div>
-            
+
             <LoadingModal open={loading} />
             <PhotoModal open={photoModal.open}
                 onClose={() => setPhotoModal({ open: false, url: '' })}
                 url={photoModal.url} />
         </div>
-    )
+    );
 }
