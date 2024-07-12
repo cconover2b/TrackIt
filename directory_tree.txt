@@ -1,0 +1,93 @@
+.
+├── README.md
+├── app
+│   ├── api
+│   │   ├── auth
+│   │   │   └── [...nextauth]
+│   │   │       └── route.ts
+│   │   ├── stats
+│   │   │   └── route.ts
+│   │   ├── ticket
+│   │   │   ├── [ticketid]
+│   │   │   │   └── route.ts
+│   │   │   ├── bulk
+│   │   │   │   └── route.ts
+│   │   │   ├── new
+│   │   │   │   └── route.ts
+│   │   │   └── route.ts
+│   │   └── user
+│   │       └── route.ts
+│   ├── auth
+│   │   ├── actions
+│   │   │   └── actions.ts
+│   │   ├── register
+│   │   │   ├── page.tsx
+│   │   │   └── registrationForm.tsx
+│   │   └── signin
+│   │       └── page.tsx
+│   ├── dashboard
+│   │   ├── auth-context.tsx
+│   │   ├── columns.tsx
+│   │   ├── data-table.tsx
+│   │   ├── inspector-list.tsx
+│   │   ├── layout.tsx
+│   │   ├── page.tsx
+│   │   ├── row-actions.tsx
+│   │   ├── stats.tsx
+│   │   └── ticket-table.tsx
+│   ├── favicon.ico
+│   ├── globals.css
+│   ├── layout.tsx
+│   └── page.tsx
+├── components
+│   ├── appbar.tsx
+│   ├── dialog
+│   │   └── map-dialog.tsx
+│   ├── map.tsx
+│   ├── modal
+│   │   ├── alert-modal.tsx
+│   │   ├── loading-modal.tsx
+│   │   └── photo-modal.tsx
+│   └── ui
+│       ├── alert-dialog.tsx
+│       ├── avatar.tsx
+│       ├── badge.tsx
+│       ├── button.tsx
+│       ├── card.tsx
+│       ├── checkbox.tsx
+│       ├── combobox.tsx
+│       ├── command.tsx
+│       ├── dialog.tsx
+│       ├── dropdown-menu.tsx
+│       ├── input.tsx
+│       ├── loader.tsx
+│       ├── popover.tsx
+│       ├── sheet.tsx
+│       ├── submit-button.tsx
+│       ├── table.tsx
+│       └── toast.tsx
+├── components.json
+├── directory_tree.txt
+├── lib
+│   ├── db.ts
+│   ├── firebase.ts
+│   └── utils.ts
+├── middleware.ts
+├── next-env.d.ts
+├── next.config.js
+├── package-lock.json
+├── package.json
+├── postcss.config.js
+├── public
+│   ├── marker_flag.png
+│   ├── next.svg
+│   └── vercel.svg
+├── schemas
+│   ├── ticket.ts
+│   └── user.ts
+├── tailwind.config.ts
+├── tsconfig.json
+└── types
+    └── index.ts
+
+24 directories, 67 files
