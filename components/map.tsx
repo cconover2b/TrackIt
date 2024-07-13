@@ -35,7 +35,7 @@ function Map(latlong: LatLong) {
             const mapOptions = {
                 center: position,
                 zoom: 17,
-                mapId: 'PETRESCUE-1234'
+                mapId: 'campaignsigns-1234'
             }
 
             // setup the map
