@@ -2,27 +2,39 @@
 
 import { connectToDB } from "@/lib/db";
 import { TicketModel } from "@/schemas/ticket";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { TicketStatus } from "@/types";
 
 export async function PATCH(
-    req: Request,
-    { params } : { params : { ticketid: string }}
+    req: NextRequest,
+    { params }: { params: { ticketid: string } }
 ) {
-    await connectToDB();
-    
-    const body = await req.json();
-    const { status } = body;
-    const ticketId = params.ticketid;
-
-    if (!ticketId) {
-        return new NextResponse("Ticketid is required", { status: 400 });
-    }
-
     try {
+        await connectToDB();
+        
+        const body = await req.json();
+        const { status, inspector } = body;
+        const ticketId = params.ticketid;
+
+        if (!ticketId) {
+            return new NextResponse("Ticketid is required", { status: 400 });
+        }
+
+        const updateData: any = {};
+        if (status) {
+            if (!Object.values(TicketStatus).includes(status)) {
+                return new NextResponse("Invalid status value", { status: 400 });
+            }
+            updateData.status = status;
+        }
+        if (inspector !== undefined) {
+            updateData.assignedInspector = inspector || null;
+        }
+
         const ticket = await TicketModel.findByIdAndUpdate(
             ticketId,
-            { status: status },
-            { new: true }
+            updateData,
+            { new: true, runValidators: true }
         );
 
         if (!ticket) {
@@ -31,7 +43,7 @@ export async function PATCH(
 
         return NextResponse.json({
             ticket: ticket,
-            message: "Ticket updated"
+            message: "Ticket updated successfully"
         });
     } catch (error) {
         console.error("Error updating ticket:", error);

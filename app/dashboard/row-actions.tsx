@@ -1,5 +1,3 @@
-// app/dashboard/row-actions.tsx
-
 import React, { useReducer, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Ticket, TicketStatus, User } from '@/types';
@@ -24,18 +22,18 @@ enum AlertDialogReasonEnum {
 
 // Interface for the state managed by useReducer
 interface RowActionReducerProps {
-    alertDialog?: boolean,
-    alertDialogReason?: AlertDialogReasonEnum,
-    mapDialog?: boolean
+    alertDialog: boolean;
+    alertDialogReason: AlertDialogReasonEnum;
+    mapDialog: boolean;
 }
 
 export function RowActions({ row }: { row: Row<Ticket> }) {
     const ticket = row.original;
     const router = useRouter();
     const [progress, setProgress] = useState(false);
-    const [open, setOpen] = useState(false);
+    const [inspectorListOpen, setInspectorListOpen] = useState(false);
 
-    const [state, setState] = useReducer((prevstate: RowActionReducerProps, params: RowActionReducerProps) => {
+    const [state, setState] = useReducer((prevstate: RowActionReducerProps, params: Partial<RowActionReducerProps>) => {
         return { ...prevstate, ...params };
     }, {
         alertDialog: false,
@@ -58,73 +56,92 @@ export function RowActions({ row }: { row: Row<Ticket> }) {
     };
 
     const handleConfirm = async () => {
-        if (state.alertDialogReason === AlertDialogReasonEnum.DELETE) {
+        try {
             setProgress(true);
-            await fetch(buildUrl(`ticket/${ticket.id}`), {
-                method: "DELETE"
-            });
-            setProgress(false);
-            toast.success('Ticket deleted');
+            if (state.alertDialogReason === AlertDialogReasonEnum.DELETE) {
+                await fetch(buildUrl(`ticket/${ticket.id}`), {
+                    method: "DELETE"
+                });
+                toast.success('Ticket deleted');
+            } else if (state.alertDialogReason === AlertDialogReasonEnum.MARK_COMPLETE) {
+                const response = await fetch(buildUrl(`ticket/${ticket.id}`), {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        status: TicketStatus.COMPLETED
+                    })
+                });
+                if (!response.ok) throw new Error('Failed to mark ticket as complete');
+                toast.success('Ticket marked as complete');
+            }
             router.refresh();
-        } else if (state.alertDialogReason === AlertDialogReasonEnum.MARK_COMPLETE) {
-            setProgress(true);
-            await fetch(buildUrl(`ticket/${ticket.id}`), {
-                method: 'PATCH',
-                body: JSON.stringify({
-                    status: TicketStatus.COMPLETED
-                })
-            });
+        } catch (error) {
+            console.error('Error in handleConfirm:', error);
+            toast.error('An error occurred. Please try again.');
+        } finally {
             setProgress(false);
-            toast.success('Ticket status updated');
-            router.refresh();
+            setState({ alertDialog: false, alertDialogReason: AlertDialogReasonEnum.NONE });
         }
     };
 
-    const handleInspectorAssign = async () => {
+    const handleInspectorAssign = async (inspector: User | null): Promise<void> => {
         try {
             setProgress(true);
-            const result = await fetch(buildUrl(`ticket/${ticket.id}`), {
+            const response = await fetch(buildUrl(`ticket/${ticket.id}`), {
                 method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
                 body: JSON.stringify({
-                    status: TicketStatus.ASSIGNED
+                    status: TicketStatus.ASSIGNED,
+                    inspector: inspector ? inspector.id : null
                 })
             });
-            const { status } = result;
-            setProgress(false);
-            if (status === 200) {
-                toast.success(`Ticket marked as assigned`);
-                router.refresh();
-            } else {
-                toast.error("Failed to update ticket");
+
+            if (!response.ok) {
+                throw new Error('Failed to update ticket');
             }
+
+            const data = await response.json();
+            toast.success(inspector ? `Assigned to ${inspector.fullName}` : 'Ticket marked as assigned');
+            router.refresh();
         } catch (error) {
-            setProgress(true);
-            toast.error("Server error");
-            console.log(error);
+            console.error('Error in handleInspectorAssign:', error);
+            toast.error("Failed to update ticket");
+        } finally {
+            setProgress(false);
+            setInspectorListOpen(false);
         }
     };
 
     const handleUnassign = async () => {
         try {
             setProgress(true);
-            const result = await fetch(buildUrl(`ticket/${ticket.id}`), {
+            const response = await fetch(buildUrl(`ticket/${ticket.id}`), {
                 method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
                 body: JSON.stringify({
-                    status: TicketStatus.UNASSIGNED
+                    status: TicketStatus.UNASSIGNED,
+                    inspector: null
                 })
             });
-            const { status } = result;
-            setProgress(false);
-            if (status === 200) {
-                toast.success(`Ticket marked as unassigned`);
-                router.refresh();
-            } else {
-                toast.error("Failed to update ticket");
+
+            if (!response.ok) {
+                throw new Error('Failed to unassign ticket');
             }
+
+            const data = await response.json();
+            toast.success(data.message);
+            router.refresh();
         } catch (error) {
-            setProgress(true);
-            toast.error("Server error");
-            console.log(error);
+            console.error('Error in handleUnassign:', error);
+            toast.error("Failed to unassign ticket");
+        } finally {
+            setProgress(false);
         }
     };
 
@@ -148,17 +165,17 @@ export function RowActions({ row }: { row: Row<Ticket> }) {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                    <DropdownMenuItem onClick={() => setOpen(true)}>
+                    <DropdownMenuItem onClick={() => setInspectorListOpen(true)}>
                         <AiOutlineUserAdd className="mr-2 h-4 w-4" />
                         Update
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={handleInspectorAssign}>
-                        <AiOutlineUserDelete className="mr-2 h-4 w-4" />
+                    <DropdownMenuItem onClick={() => setInspectorListOpen(true)}>
+                        <AiOutlineUserAdd className="mr-2 h-4 w-4" />
                         Assign
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={handleUnassign}>
                         <AiOutlineUserDelete className="mr-2 h-4 w-4" />
-                        UnAssign
+                        Unassign
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={handleMapview}>
                         <BsFillMapFill className="mr-2 h-4 w-4" />
@@ -177,13 +194,17 @@ export function RowActions({ row }: { row: Row<Ticket> }) {
             </DropdownMenu>
 
             <MapDialog
-                open={state.mapDialog!}
+                open={state.mapDialog}
                 onClose={() => setState({ mapDialog: false })}
                 latlong={ticket.latlong!}
             />
-            <InspectorList open={open} setOpen={setOpen} onInspectorAssign={handleInspectorAssign} />
+            <InspectorList 
+                open={inspectorListOpen} 
+                setOpen={setInspectorListOpen} 
+                onInspectorAssign={handleInspectorAssign} 
+            />
             <AlertModal
-                open={state.alertDialog!}
+                open={state.alertDialog}
                 onClose={() => setState({
                     alertDialog: false,
                     alertDialogReason: AlertDialogReasonEnum.NONE
