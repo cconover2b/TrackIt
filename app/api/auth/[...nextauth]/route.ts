@@ -1,3 +1,5 @@
+// app/api/auth/[...nextauth]/route.ts
+
 import { connectToDB } from "@/lib/db";
 import { comparePassword } from "@/lib/utils";
 import { UserModel } from "@/schemas/user";
