@@ -159,35 +159,33 @@ export function RowActions({ row }: { row: Row<Ticket> }) {
         });
     };
 
-    const handleUpdate = () => {
-        setUpdatedTicket(ticket);
-        setUpdateSheetOpen(true);
-    };
-
-    const handleUpdateSubmit = async () => {
+    const handleUpdate = async () => {
+        setProgress(true);
         try {
-            setProgress(true);
             const response = await fetch(buildUrl(`ticket/${ticket.id}`), {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(updatedTicket),
+                body: JSON.stringify(updatedTicket)
             });
 
-            if (response.ok) {
-                toast.success('Ticket updated successfully');
-                setUpdateSheetOpen(false);
-                router.refresh();
-            } else {
-                toast.error('Failed to update ticket');
-            }
+            if (!response.ok) throw new Error('Failed to update ticket');
+            
+            toast.success('Ticket updated successfully');
+            router.refresh();
+            setUpdateSheetOpen(false);
         } catch (error) {
             console.error('Error updating ticket:', error);
-            toast.error('An error occurred while updating the ticket');
+            toast.error("Failed to update ticket");
         } finally {
             setProgress(false);
         }
+    };
+
+    const handleUpdateSheetOpen = () => {
+        setUpdatedTicket(ticket);
+        setUpdateSheetOpen(true);
     };
 
     return (
@@ -196,7 +194,7 @@ export function RowActions({ row }: { row: Row<Ticket> }) {
                 <DropdownMenuTrigger asChild>
                     <Button
                         variant="ghost"
-                        className='flex h-8 w-8 p-0 data-[state=open]:bg:muted'
+                        className='flex h-8 w-8 p-0 data-[state=open]:bg-muted'
                     >
                         <span className='sr-only'>Open Menu</span>
                         <MdMoreVert />
@@ -204,7 +202,7 @@ export function RowActions({ row }: { row: Row<Ticket> }) {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                    <DropdownMenuItem onClick={handleUpdate}>
+                    <DropdownMenuItem onClick={handleUpdateSheetOpen}>
                         <AiOutlineEdit className="mr-2 h-4 w-4" />
                         Update
                     </DropdownMenuItem>
@@ -237,95 +235,103 @@ export function RowActions({ row }: { row: Row<Ticket> }) {
                 onClose={() => setState({ mapDialog: false })}
                 latlong={ticket.latlong!}
             />
-            <InspectorList 
-                open={inspectorListOpen} 
-                setOpen={setInspectorListOpen} 
-                onInspectorAssign={handleInspectorAssign} 
-            />
-            <AlertModal
-                open={state.alertDialog}
-                onClose={() => setState({
-                    alertDialog: false,
-                    alertDialogReason: AlertDialogReasonEnum.NONE
-                })}
-                onConfirm={handleConfirm}
-            />
+            
+			<InspectorList 
+				open={inspectorListOpen} 
+				setOpen={setInspectorListOpen} 
+				onInspectorAssign={handleInspectorAssign} 
+			/>
+			
+			<AlertModal
+				open={state.alertDialog}
+				onClose={() => setState({
+					alertDialog: false,
+					alertDialogReason: AlertDialogReasonEnum.NONE
+				})}
+				onConfirm={handleConfirm}
+			/>
 
-            <Sheet open={updateSheetOpen} onOpenChange={setUpdateSheetOpen}>
-                <SheetContent>
-                    <SheetHeader>
-                        <SheetTitle>Update Ticket</SheetTitle>
-                    </SheetHeader>
-                    <div className="grid gap-4 py-4">
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="name" className="text-right">
-                                Name
-                            </Label>
-                            <Input
-                                id="name"
-                                value={updatedTicket.submitterName || ''}
-                                onChange={(e) => setUpdatedTicket({...updatedTicket, submitterName: e.target.value})}
-                                className="col-span-3"
-                            />
-                        </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="phone" className="text-right">
-                                Phone
-                            </Label>
-                            <Input
-                                id="phone"
-                                value={updatedTicket.submitterPhone || ''}
-                                onChange={(e) => setUpdatedTicket({...updatedTicket, submitterPhone: e.target.value})}
-                                className="col-span-3"
-                            />
-                        </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="email" className="text-right">
-                                Email
-                            </Label>
-                            <Input
-                                id="email"
-                                value={updatedTicket.submitterEmail || ''}
-                                onChange={(e) => setUpdatedTicket({...updatedTicket, submitterEmail: e.target.value})}
-                                className="col-span-3"
-                            />
-                        </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="status" className="text-right">
-                                Status
-                            </Label>
-                            <select
-                                id="status"
-                                value={updatedTicket.status || ''}
-                                onChange={(e) => setUpdatedTicket({...updatedTicket, status: e.target.value as TicketStatus})}
-                                className="col-span-3"
-                            >
-                                {Object.values(TicketStatus).map((status) => (
-                                    <option key={status} value={status}>
-                                        {status}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="notes" className="text-right">
-                                Notes
-                            </Label>
-                            <Textarea
-                                id="notes"
-                                value={updatedTicket.notes || ''}
-                                onChange={(e) => setUpdatedTicket({...updatedTicket, notes: e.target.value})}
-                                className="col-span-3"
-                            />
-                        </div>
-                    </div>
-                    <SheetFooter>
-                        <Button onClick={handleUpdateSubmit} disabled={progress}>
-                            {progress ? 'Updating...' : 'Update Ticket'}
-                        </Button>
-                    </SheetFooter>
-                </SheetContent>
-            </Sheet>
+			<Sheet open={updateSheetOpen} onOpenChange={setUpdateSheetOpen}>
+				<SheetContent>
+					<SheetHeader>
+						<SheetTitle>Update Ticket</SheetTitle>
+					</SheetHeader>
+					<div className="grid gap-4 py-4">
+						<div className="grid grid-cols-4 items-center gap-4">
+							<Label htmlFor="name" className="text-right">
+								Name
+							</Label>
+							<Input
+								id="name"
+								value={updatedTicket.submitterName || ''}
+								onChange={(e) => setUpdatedTicket({...updatedTicket, submitterName: e.target.value})}
+								className="col-span-3"
+							/>
+						</div>
+
+						<div className="grid grid-cols-4 items-center gap-4">
+							<Label htmlFor="phone" className="text-right">
+								Phone
+							</Label>
+							<Input
+								id="phone"
+								value={updatedTicket.submitterPhone || ''}
+								onChange={(e) => setUpdatedTicket({...updatedTicket, submitterPhone: e.target.value})}
+								className="col-span-3"
+							/>
+						</div>
+
+						<div className="grid grid-cols-4 items-center gap-4">
+							<Label htmlFor="email" className="text-right">
+								Email
+							</Label>
+							<Input
+								id="email"
+								value={updatedTicket.submitterEmail || ''}
+								onChange={(e) => setUpdatedTicket({...updatedTicket, submitterEmail: e.target.value})}
+								className="col-span-3"
+							/>
+						</div>
+
+						<div className="grid grid-cols-4 items-center gap-4">
+							<Label htmlFor="status" className="text-right">
+								Status
+							</Label>
+							<select
+								id="status"
+								value={updatedTicket.status || ''}
+								onChange={(e) => setUpdatedTicket({...updatedTicket, status: e.target.value as TicketStatus})}
+								className="col-span-3"
+							>
+								{Object.values(TicketStatus).map((status) => (
+									<option key={status} value={status}>{status}</option>
+								))}
+							</select>
+						</div>
+
+						<div className="grid grid-cols-4 items-center gap-4">
+							<Label htmlFor="notes" className="text-right">
+								Notes
+							</Label>
+							<Textarea
+								id="notes"
+								value={updatedTicket.notes || ''}
+								onChange={(e) => setUpdatedTicket({...updatedTicket, notes: e.target.value})}
+								className="col-span-3"
+							/>
+						</div>
+
+					</div>
+
+					<SheetFooter>
+						<Button type='button' disabled={progress} onClick={handleUpdate}>
+							{progress ? 'Updating…' : 'Update Ticket'}
+						</Button>
+					</SheetFooter>
+
+				</SheetContent>
+			</Sheet>
+
         </>
     );
 }

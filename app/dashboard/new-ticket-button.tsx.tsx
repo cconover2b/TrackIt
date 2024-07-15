@@ -88,6 +88,17 @@ const NewTicketButton: React.FC = () => {
                             />
                         </div>
                         <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="crossroads" className="text-right">
+                                Crossroads
+                            </Label>
+                            <Input
+                                id="crossroads"
+                                value={newTicket.crossroads || ''}
+                                onChange={(e) => setNewTicket({...newTicket, crossroads: e.target.value})}
+                                className="col-span-3"
+                            />
+                        </div>
+                        <div className="grid grid-cols-4 items-center gap-4">
                             <Label htmlFor="status" className="text-right">
                                 Status
                             </Label>

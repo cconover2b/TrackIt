@@ -6,7 +6,7 @@ export type Ticket = {
     submitterName: string, // Name of the person submitting the ticket
     submitterPhone: string, // Phone number of the submitter
     submitterEmail?: string, // Optional email address of the submitter
-    pet?: string, // Optional pet information
+    crossroads: string, // Crossroads information
     assignedInspector?: string, // Optional ID of the assigned inspector
     dateOfRequest: Date, // Date when the ticket was created
     resolvedDate?: Date, // Optional date when the ticket was resolved

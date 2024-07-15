@@ -60,8 +60,8 @@ export const columns: ColumnDef<Ticket>[] = [
         }
     },
     {
-        accessorKey: "submitterPhone",
-        header: "Phone"
+        accessorKey: "crossroads",
+        header: "Crossroads"
     },
     {
         accessorKey: 'assignedInspector',

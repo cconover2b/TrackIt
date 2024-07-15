@@ -7,6 +7,7 @@ const TicketSchema = new Schema<Ticket>({
     submitterName: String,
     submitterPhone: String,
     submitterEmail: String,
+    crossroads: String,
     assignedInspector: {
         type: mongoose.Types.ObjectId,
         ref: 'User',

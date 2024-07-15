@@ -166,14 +166,36 @@ export function DataTable<TData extends RowData, TValue>({ columns, data }: Data
                             </DropdownMenuContent>
                         </DropdownMenu>
                         :
-                        <Input
-                            placeholder="Filter by name..."
-                            value={(table.getColumn('submitterName')?.getFilterValue() as string ?? "")}
-                            onChange={(event) =>
-                                table.getColumn('submitterName')?.setFilterValue(event.target.value)
-                            }
-                            className="max-w-sm"
-                        />
+                        <>
+                            <Input
+                                placeholder="Filter by name..."
+                                value={(table.getColumn('submitterName')?.getFilterValue() as string ?? "")}
+                                onChange={(event) =>
+                                    table.getColumn('submitterName')?.setFilterValue(event.target.value)
+                                }
+                                className="max-w-sm mr-4"
+                            />
+                            <Input
+                                placeholder="Filter crossroads..."
+                                value={(table.getColumn('crossroads')?.getFilterValue() as string) ?? ""}
+                                onChange={(event) =>
+                                    table.getColumn('crossroads')?.setFilterValue(event.target.value)
+                                }
+                                className="max-w-sm mr-4"
+                            />
+                            <select
+                                value={(table.getColumn('status')?.getFilterValue() as string) ?? ""}
+                                onChange={(event) =>
+                                    table.getColumn('status')?.setFilterValue(event.target.value)
+                                }
+                                className="max-w-sm"
+                            >
+                                <option value="">All Statuses</option>
+                                {Object.values(TicketStatus).map((status) => (
+                                    <option key={status} value={status}>{status}</option>
+                                ))}
+                            </select>
+                        </>
                 }
             </div>
 
