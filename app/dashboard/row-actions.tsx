@@ -293,6 +293,18 @@ export function RowActions({ row }: { row: Row<Ticket> }) {
 							/>
 						</div>
 
+                        <div className="grid grid-cols-4 items-center gap-4">
+							<Label htmlFor="crossroads" className="text-right">
+                                Crossroads
+							</Label>
+							<Input
+								id="crossroads"
+								value={updatedTicket.crossroads || ''}
+								onChange={(e) => setUpdatedTicket({...updatedTicket, crossroads: e.target.value})}
+								className="col-span-3"
+							/>
+						</div>
+
 						<div className="grid grid-cols-4 items-center gap-4">
 							<Label htmlFor="status" className="text-right">
 								Status
