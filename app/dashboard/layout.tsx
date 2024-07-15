@@ -1,7 +1,11 @@
 // app/dashboard/layout.tsx
+
 import Appbar from '@/components/appbar'
 import React from 'react'
 import AuthContext from './auth-context'
+
+// If you need global styles, import them here
+// import '../globals.css'
 
 function DashboardLayout({
   children
@@ -15,7 +19,6 @@ function DashboardLayout({
         <section className='px-4'>{children}</section>
       </div>
     </AuthContext>
-
   )
 }
 
