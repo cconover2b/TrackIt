@@ -20,33 +20,33 @@ const handler = nextAuth({
             },
             authorize: async (credentials, req) => {
                 try {
-
-                    await connectToDB()
+                    await connectToDB();
 
                     const user = await UserModel.findOne({
                         email: credentials?.email
-                    })
+                    });
 
-                    if( user ) {
+                    if (user) {
                         const passwordMatch = await comparePassword(
                             credentials?.password || '', user.password
-                        )
-                        
+                        );
+
                         if (passwordMatch) {
-                            return user
+                            return user;
                         }
                     }
 
-                    return null
+                    return null;
                 } catch (error) {
-                    console.log(error)
+                    console.log(error);
+                    return null;
                 }
             }
         })
     ]
-})
+});
 
 export {
     handler as GET,
     handler as POST
-}
+};

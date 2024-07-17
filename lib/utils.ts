@@ -14,7 +14,7 @@ export function buildUrl(endPoint: string): string {
   return url.href
 }
 
-export async function hashPasswrod(nakedPassword: string) {
+export async function hashPassword(nakedPassword: string) {
   const hashPasswrod = await hash(nakedPassword, 10)
   return hashPasswrod
 }
@@ -23,4 +23,4 @@ export async function comparePassword(nakedPassword: string, hashPassword: strin
   const result = await compare(nakedPassword, hashPassword)
 
   return result
-}
+} 
