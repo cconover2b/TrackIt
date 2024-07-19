@@ -21,6 +21,8 @@ const NewTicketButton: React.FC = () => {
     const handleSubmit = async () => {
         try {
             setProgress(true);
+            console.log("About to send request for new ticket***");
+            console.log(JSON.stringify(newTicket));
             const response = await fetch(buildUrl('ticket/new'), {
                 method: 'POST',
                 headers: {

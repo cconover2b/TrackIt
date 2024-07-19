@@ -9,7 +9,7 @@ export async function GET() {
         await connectToDB()
 
         const tickets = await TicketModel.find({}).populate('assignedInspector')
-
+            console.log("populating the inspector for assign")
         return Response.json(tickets)
     } catch(error) {
         console.log(error);
