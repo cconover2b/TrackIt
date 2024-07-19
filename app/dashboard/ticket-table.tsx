@@ -1,26 +1,48 @@
-// app/dashboard/ticket-table.tsx
-import { buildUrl } from '@/lib/utils'
-import { Ticket } from '@/types'
-import React from 'react'
-import { DataTable } from './data-table'
-import { columns } from './columns'
+"use client";
 
-async function TicketTable() {
+import { buildUrl } from '@/lib/utils';
+import { Ticket } from '@/types';
+import React, { useEffect, useState } from 'react';
+import { DataTable } from './data-table';
+import { columns } from './columns';
 
-    const tickets = await fetch(buildUrl('ticket'),{
-        cache: 'no-cache'
-    })
+const TicketTable = () => {
+    const [tickets, setTickets] = useState<Ticket[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
-    const ticketsJson: Ticket[] = await tickets.json()
+    useEffect(() => {
+        const fetchTickets = async () => {
+            try {
+                const response = await fetch(buildUrl('ticket'), {
+                    cache: 'no-cache'
+                });
+                const ticketsJson: Ticket[] = await response.json();
+                setTickets(ticketsJson);
+            } catch (error) {
+                setError('Failed to fetch tickets');
+            } finally {
+                setLoading(false);
+            }
+        };
 
-    console.log(ticketsJson)
-  return (
-    <DataTable 
-      columns={columns}
-      data={ticketsJson}
-    />
+        fetchTickets();
+    }, []);
 
-  )
+    if (loading) {
+        return <div>Loading...</div>;
+    }
+
+    if (error) {
+        return <div>{error}</div>;
+    }
+
+    return (
+        <DataTable 
+            columns={columns}
+            data={tickets}
+        />
+    );
 }
 
-export default TicketTable
+export default TicketTable;
