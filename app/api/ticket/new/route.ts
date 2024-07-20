@@ -20,6 +20,7 @@ export async function POST(request: NextRequest, response: NextResponse) {
         const crossroads = userInfo.Crossroads;
         const lat = userInfo.latlong.lat;
         const long = userInfo.latlong.long;
+        const notes = userInfo.notes;
         const fileBase64 = userInfo.image; // Assume the image is a base64 encoded string
 
         let ticketToSave = {
