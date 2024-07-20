@@ -24,6 +24,7 @@
     "class-variance-authority": "^0.4.0",
     "clsx": "^2.1.0",
     "cmdk": "^1.0.0",
+    "express": "^4.19.2",
     "firebase": "^10.5.2",
     "formik": "^2.4.6",
     "lucide-react": "^0.331.0",
@@ -42,7 +43,9 @@
     "yup": "^1.4.0"
   },
   "devDependencies": {
+    "@testing-library/react": "^16.0.0",
     "@types/google.maps": "^3.55.5",
+    "@types/jest": "^29.5.12",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

@@ -1,9 +1,7 @@
-'use client'
 // app/dashboard/stats.tsx
-
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { buildUrl } from '@/lib/utils';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {
     MdFiberNew,
     MdOutlineDoneOutline, MdOutlineAssignmentTurnedIn, MdPersonAddDisabled
@@ -14,52 +12,34 @@ interface Stats {
     count: number;
 }
 
-const Stats = () => {
-    const [stats, setStats] = useState<Stats[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+async function Stats() {
+    let json: Stats[] = [];
 
-    useEffect(() => {
-        const fetchStats = async () => {
-            try {
-                const response = await fetch(buildUrl('stats'), {
-                    cache: 'no-cache'
-                });
+    try {
+        // data from the backend fetch request
+        const stats = await fetch(buildUrl('stats'), {
+            cache: 'no-cache'
+        });
 
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
+        if (!stats.ok) {
+            throw new Error('Network response was not ok');
+        }
 
-                const data: Stats[] = await response.json();
-                setStats(data);
-                setLoading(false);
-            } catch (error) {
-                if (error instanceof Error) {
-                    setError(error.message);
-                } else {
-                    setError('Unexpected error');
-                }
-                setLoading(false);
-            }
-        };
-
-        fetchStats();
-    }, []);
+        json = await stats.json();
+    } catch (error) {
+        if (error instanceof Error) {
+            console.error('Error fetching stats:', error.message);
+        } else {
+            console.error('Unexpected error:', error);
+        }
+    }
 
     const statsFor = (token: string) => {
-        const filteredStats = stats.filter(stat => stat._id.status === token);
+        const filteredStats = json.filter(stats => stats._id.status === token);
         return filteredStats.length > 0
-            ? filteredStats.map(stat => stat.count).reduce((a, b) => a + b, 0)
+            ? filteredStats.map(stats => stats.count).reduce((a, b) => a + b, 0)
             : 0;
     };
-
-    if (loading) {
-        return <div>Loading...</div>;
-    }
-
-    if (error) {
-        return <div>Error: {error}</div>;
-    }
 
     return (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
