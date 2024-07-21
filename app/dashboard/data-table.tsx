@@ -182,7 +182,7 @@ export function DataTable<TData extends RowData, TValue>({ columns, data }: Data
                                 className="max-w-sm mr-4"
                             />
                             <Input
-                                placeholder="Filter crossroads..."
+                                placeholder="Filter by crossroads..."
                                 value={(table.getColumn('crossroads')?.getFilterValue() as string) ?? ""}
                                 onChange={(event) =>
                                     table.getColumn('crossroads')?.setFilterValue(event.target.value)

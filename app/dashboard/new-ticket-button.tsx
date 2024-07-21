@@ -108,17 +108,6 @@ const NewTicketButton: React.FC = () => {
                             />
                         </div>
                         <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="notes" className="text-right">
-                                Notes
-                            </Label>
-                            <Input
-                                id="notes"
-                                value={newTicket.notes || ''}
-                                onChange={(e) => setNewTicket({...newTicket, notes: e.target.value})}
-                                className="col-span-3"
-                            />
-                        </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
                             <Label htmlFor="status" className="text-right">
                                 Status
                             </Label>
@@ -150,7 +139,7 @@ const NewTicketButton: React.FC = () => {
                             <Label htmlFor="assignedInspector" className="text-right">
                             Assigned Inspector
                             </Label>
-                            <Textarea
+                            <Input
                                 id="assignedInspector"
                                 value={newTicket.assignedInspector || 'none'}
                                 onChange={(e) => setNewTicket({...newTicket, assignedInspector: e.target.value})}
@@ -161,7 +150,7 @@ const NewTicketButton: React.FC = () => {
                             <Label htmlFor="photo" className="text-right">
                                 photo
                             </Label>
-                            <Textarea
+                            <Input
                                 id="photo"
                                 value={newTicket.photo || ''}
                                 onChange={(e) => setNewTicket({...newTicket, photo: e.target.value})}

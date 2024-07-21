@@ -1,0 +1,97 @@
+.
+├── README.md                        # Documentation for the project
+├── app                              # Main application directory
+│   ├── api                          # API routes
+│   │   ├── auth                     # Authentication-related routes
+│   │   │   └── [...nextauth]        # Dynamic route for NextAuth.js
+│   │   │       └── route.ts         # Handles authentication logic
+│   │   ├── stats                    # Statistics-related routes
+│   │   │   └── route.ts             # Handles statistics logic
+│   │   ├── ticket                   # Ticket-related routes
+│   │   │   ├── [ticketid]           # Dynamic route for specific ticket
+│   │   │   │   └── route.ts         # Handles specific ticket logic
+│   │   │   ├── bulk                 # Bulk ticket operations
+│   │   │   │   └── route.ts         # Handles bulk ticket logic
+│   │   │   ├── new                  # New ticket creation
+│   │   │   │   └── route.ts         # Handles new ticket creation logic
+│   │   │   └── route.ts             # General ticket operations
+│   │   └── user                     # User-related routes
+│   │       └── route.ts             # Handles user operations
+│   ├── auth                         # Authentication pages
+│   │   ├── actions                  # Authentication actions
+│   │   │   └── actions.ts           # Defines authentication actions
+│   │   ├── register                 # Registration page
+│   │   │   ├── page.tsx             # Registration page component
+│   │   │   └── registrationForm.tsx # Registration form component
+│   │   └── signin                   # Sign-in page
+│   │       └── page.tsx             # Sign-in page component
+│   ├── dashboard                    # Dashboard components
+│   │   ├── auth-context.tsx         # Context for authentication state
+│   │   ├── columns.tsx              # Defines columns for data tables
+│   │   ├── data-table.tsx           # Data table component
+│   │   ├── inspector-list.tsx       # Inspector list component
+│   │   ├── layout.tsx               # Layout for the dashboard
+│   │   ├── new-ticket-button.tsx    # Button to create new tickets
+│   │   ├── page.tsx                 # Dashboard page component
+│   │   ├── row-actions.tsx          # Actions for rows in data tables
+│   │   ├── stats.tsx                # Statistics component
+│   │   └── ticket-table.tsx         # Ticket table component
+│   ├── favicon.ico                  # Favicon for the application
+│   ├── globals.css                  # Global CSS styles
+│   ├── layout.tsx                   # Main layout component
+│   ├── page.tsx                     # Main page component
+│   └── presentation                 # Presentation components
+│       └── page.tsx                 # Presentation page component
+├── components                       # Reusable components
+│   ├── SlideDeck.tsx                # Slide deck component
+│   ├── appbar.tsx                   # App bar component
+│   ├── dialog                       # Dialog components
+│   │   └── map-dialog.tsx           # Map dialog component
+│   ├── map.tsx                      # Map component
+│   ├── modal                        # Modal components
+│   │   ├── alert-modal.tsx          # Alert modal component
+│   │   ├── loading-modal.tsx        # Loading modal component
+│   │   └── photo-modal.tsx          # Photo modal component
+│   └── ui                           # UI components
+│       ├── alert-dialog.tsx         # Alert dialog component
+│       ├── avatar.tsx               # Avatar component
+│       ├── badge.tsx                # Badge component
+│       ├── button.tsx               # Button component
+│       ├── card.tsx                 # Card component
+│       ├── checkbox.tsx             # Checkbox component
+│       ├── combobox.tsx             # Combobox component
+│       ├── command.tsx              # Command component
+│       ├── dialog.tsx               # Dialog component
+│       ├── dropdown-menu.tsx        # Dropdown menu component
+│       ├── input.tsx                # Input component
+│       ├── label.tsx                # Label component
+│       ├── loader.tsx               # Loader component
+│       ├── popover.tsx              # Popover component
+│       ├── sheet.tsx                # Sheet component
+│       ├── submit-button.tsx        # Submit button component
+│       ├── table.tsx                # Table component
+│       ├── textarea.tsx             # Textarea component
+│       └── toast.tsx                # Toast notification component
+├── components.json                  # JSON file for components
+├── directory_tree.txt               # Text file of the directory structure
+├── lib                              # Library files
+│   ├── db.ts                        # Database connection and utilities
+│   ├── firebase.ts                  # Firebase configuration and utilities
+│   └── utils.ts                     # Utility functions
+├── middleware.ts                    # Middleware configuration
+├── next-env.d.ts                    # TypeScript environment definitions
+├── next.config.js                   # Next.js configuration
+├── package-lock.json                # NPM package lock file
+├── package.json                     # NPM package file
+├── postcss.config.js                # PostCSS configuration
+├── public                           # Public assets
+│   ├── marker_flag.png              # Marker flag image
+│   ├── next.svg                     # Next.js logo
+│   └── vercel.svg                   # Vercel logo
+├── schemas                          # Database schemas
+│   ├── ticket.ts                    # Ticket schema
+│   └── user.ts                      # User schema
+├── tailwind.config.ts               # Tailwind CSS configuration
+├── tsconfig.json                    # TypeScript configuration
+└── types                            # TypeScript types
+    └── index.ts                     # Index of TypeScript types
