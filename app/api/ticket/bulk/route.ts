@@ -10,18 +10,19 @@ import { ObjectId } from "mongodb";
 export async function PATCH(
     req: Request
 ) {
-
     try {
         await connectToDB();
 
         const body = await req.json();
-        const { tickets, status } = body;
-
+        const { tickets, status, submitterName } = body;
+        
         await TicketModel.updateMany({
             _id: tickets.map((t: ObjectId) => t)
         }, {
-            status: status
+            status: status,
+            submitterName: submitterName
         });
+        
 
         return new Response(JSON.stringify("Tickets updated"), {
             headers: { 'Content-Type': 'application/json' }
@@ -41,6 +42,7 @@ export async function DELETE(
     try {
         const body = await req.json();
         const { tickets } = body;
+        
         const ticketsToDelete = await TicketModel.find<Ticket>({
             _id: tickets.map((t: ObjectId) => t)
         });
@@ -50,11 +52,12 @@ export async function DELETE(
         });
 
         // TODO: also delete the firebase image
+        
         if (ticketsToDelete.length > 0) {
             for (const ticket of ticketsToDelete) {
                 if (ticket.photo) {
-                    const ref = storageRef(ticket.photo)
-                    await deleteObject(ref)
+                    const ref = storageRef(ticket.photo);
+                    await deleteObject(ref);
                 }
             }
         }
@@ -64,6 +67,7 @@ export async function DELETE(
         });
     } catch (error) {
         console.log(error);
+        
         return new Response(JSON.stringify("Failed to delete tickets"), {
             headers: { 'Content-Type': 'application/json' }
         });

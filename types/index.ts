@@ -7,20 +7,25 @@ export type Ticket = {
     submitterPhone: string, // Phone number of the submitter
     submitterEmail?: string, // Optional email address of the submitter
     crossroads: string, // Crossroads information
+    notes: string, // Additional notes related to the ticket
     assignedInspector?: string, // Optional ID of the assigned inspector
-    dateOfRequest: Date, // Date when the ticket was created
+    dateOfRequest?: Date, // Date when the ticket was created
     resolvedDate?: Date, // Optional date when the ticket was resolved
     status: string, // Status of the ticket
-    notes?: string, // Optional additional notes related to the ticket
     photo?: string, // Optional URL or path to a photo related to the ticket
     latlong?: LatLong // Optional geographical coordinates
 }
 
 // Type definition for geographical coordinates (GeoJSON format)
-export type LatLong = {
-    type?: string, // Type of GeoJSON object, default is 'Point'
-    coordinates: number[] // Array of numbers representing the coordinates
-}
+// export type LatLong = {
+//     type?: string, // Type of GeoJSON object, default is 'Point'
+//     coordinates: number[] // Array of numbers representing the coordinates
+// }
+// Define LatLong type
+type LatLong = {
+    lat: number;
+    long: number;
+};
 
 // Type definition for a User
 export type User = {

@@ -1,4 +1,5 @@
 "use client";
+// app/dashboard/ticket-table.tsx
 
 import { buildUrl } from '@/lib/utils';
 import { Ticket } from '@/types';
@@ -17,7 +18,9 @@ const TicketTable = () => {
                 const response = await fetch(buildUrl('ticket'), {
                     cache: 'no-cache'
                 });
+
                 const ticketsJson: Ticket[] = await response.json();
+                console.log('Fetched tickets:', ticketsJson); // Log fetched data
                 setTickets(ticketsJson);
             } catch (error) {
                 setError('Failed to fetch tickets');
@@ -38,10 +41,12 @@ const TicketTable = () => {
     }
 
     return (
-        <DataTable 
-            columns={columns}
-            data={tickets}
-        />
+        <div className="overflow-auto h-[calc(100vh-200px)] border rounded">
+            <DataTable 
+                columns={columns}
+                data={tickets}
+            />
+        </div>
     );
 }
 

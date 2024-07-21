@@ -32,6 +32,7 @@ import { toast } from 'react-toastify';
 import PhotoModal from "@/components/modal/photo-modal";
 import LoadingModal from "@/components/modal/loading-modal";
 
+
 declare module '@tanstack/react-table' {
     interface TableMeta<TData extends RowData> {
         photoThumbClicked: (rowIndex: string) => void;
@@ -78,7 +79,12 @@ export function DataTable<TData extends RowData, TValue>({ columns, data }: Data
                     url: photo
                 });
             }
-        }
+        },
+        initialState: {
+            pagination: {
+                pageSize: 500, // Set this to the number of rows you want to display
+            },
+        },
     });
 
     const handleMarkComplete = async () => {

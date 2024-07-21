@@ -22,7 +22,14 @@ const NewTicketButton: React.FC = () => {
         try {
             setProgress(true);
             console.log("About to send request for new ticket***");
-            console.log(JSON.stringify(newTicket));
+
+            setNewTicket({
+                ...newTicket,
+                dateOfRequest: new Date(Date.now()),
+            });
+            //const [lat, long] = '33.3528,-111.7890'.split(',').map(Number);
+            // setNewTicket({...newTicket, latlong: { lat: 33.3528, long: -111.7890 }});
+            // console.log('******************************* newTicket***:' + JSON.stringify(newTicket));
             const response = await fetch(buildUrl('ticket/new'), {
                 method: 'POST',
                 headers: {
@@ -63,7 +70,7 @@ const NewTicketButton: React.FC = () => {
                             <Input
                                 id="name"
                                 value={newTicket.submitterName || ''}
-                                onChange={(e) => setNewTicket({...newTicket, submitterName: e.target.value})}
+                                onChange={(e) => setNewTicket({...newTicket, submitterName: e.target.value, latlong: { lat: 33.3528, long: -111.7890 }})}
                                 className="col-span-3"
                             />
                         </div>
@@ -101,6 +108,17 @@ const NewTicketButton: React.FC = () => {
                             />
                         </div>
                         <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="notes" className="text-right">
+                                Notes
+                            </Label>
+                            <Input
+                                id="notes"
+                                value={newTicket.notes || ''}
+                                onChange={(e) => setNewTicket({...newTicket, notes: e.target.value})}
+                                className="col-span-3"
+                            />
+                        </div>
+                        <div className="grid grid-cols-4 items-center gap-4">
                             <Label htmlFor="status" className="text-right">
                                 Status
                             </Label>
@@ -128,6 +146,44 @@ const NewTicketButton: React.FC = () => {
                                 className="col-span-3"
                             />
                         </div>
+                        <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="assignedInspector" className="text-right">
+                            Assigned Inspector
+                            </Label>
+                            <Textarea
+                                id="assignedInspector"
+                                value={newTicket.assignedInspector || 'none'}
+                                onChange={(e) => setNewTicket({...newTicket, assignedInspector: e.target.value})}
+                                className="col-span-3"
+                            />
+                        </div>
+                        <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="photo" className="text-right">
+                                photo
+                            </Label>
+                            <Textarea
+                                id="photo"
+                                value={newTicket.photo || ''}
+                                onChange={(e) => setNewTicket({...newTicket, photo: e.target.value})}
+                                className="col-span-3"
+                            />
+                        </div>
+                        {/* <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="latlong" className="text-right">
+                                latlong
+                            </Label>
+                            <Textarea
+                                id="latlong"
+                                value={newTicket.latlong ? `${newTicket.latlong.lat},${newTicket.latlong.long}` : '33.3528,-111.7890'}
+                                onChange={(e) => {
+                                    console.log('latlong:*** ' + e.target.value);
+                                    const [lat, long] = e.target.value.split(',').map(Number);
+                                    console.log('lat:*** ' + lat);
+                                    setNewTicket({...newTicket, latlong: { lat: lat, long: long }});
+                                }}
+                                className="col-span-3"
+                            />
+                        </div> */}
                     </div>
                     <SheetFooter>
                         <Button onClick={handleSubmit} disabled={progress}>
@@ -141,3 +197,16 @@ const NewTicketButton: React.FC = () => {
 };
 
 export default NewTicketButton;
+
+
+// {
+//     "assignedInspector": "Bob Johnson",
+//     "dateOfRequest": "2024-07-18T10:30:45.772+00:00",
+
+
+//     "photo": "https://firebasestorage.googleapis.com/v0/b/petrescueyt-f751e.appspot.com/o?1720937543204.JPG?alt=media&token=9dfaa187-643f-4839-91aa-9471c8974df4",
+//     "latlong": {
+//         "lat": 48.8584,
+//         "long": 2.2945
+//     }
+// }

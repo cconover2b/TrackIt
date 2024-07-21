@@ -8,6 +8,7 @@ const TicketSchema = new Schema<Ticket>({
     submitterPhone: String,
     submitterEmail: String,
     crossroads: String,
+    notes: String,
     assignedInspector: {
         type: mongoose.Types.ObjectId,
         ref: 'User',
@@ -20,7 +21,6 @@ const TicketSchema = new Schema<Ticket>({
         default: TicketStatus.NEW,
         get: (v: any) => `${v}`
     },
-    notes: String,
     photo: String,
     // source: https://www.mongodb.com/docs/manual/reference/geojson/
     latlong: {

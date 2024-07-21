@@ -1,23 +1,24 @@
 'use client'
+// app/dashboard/row-actions.tsx
 
-import React, { useReducer, useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Ticket, TicketStatus, User } from '@/types';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Row } from '@tanstack/react-table';
-import { useRouter } from 'next/navigation';
-import { MdMoreVert } from 'react-icons/md';
-import { AiOutlineUserAdd, AiOutlineUserDelete, AiOutlineCheck, AiOutlineEdit } from 'react-icons/ai';
-import { BsFillMapFill, BsFillTrashFill } from 'react-icons/bs';
-import AlertModal from '@/components/modal/alert-modal';
-import { buildUrl } from '@/lib/utils';
-import { toast } from 'react-toastify';
-import InspectorList from './inspector-list';
+import React, { useReducer, useState } from 'react'
+import { Button } from '@/components/ui/button'
+import { Ticket, TicketStatus, User } from '@/types'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import { Row } from '@tanstack/react-table'
+import { useRouter } from 'next/navigation'
+import { MdMoreVert } from 'react-icons/md'
+import { AiOutlineUserAdd, AiOutlineUserDelete, AiOutlineCheck, AiOutlineEdit } from 'react-icons/ai'
+import { BsFillMapFill, BsFillTrashFill } from 'react-icons/bs'
+import AlertModal from '@/components/modal/alert-modal'
+import { buildUrl } from '@/lib/utils'
+import { toast } from 'react-toastify'
+import InspectorList from './inspector-list'
 import MapDialog from '@/components/dialog/map-dialog';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetFooter } from '@/components/ui/sheet';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetFooter } from '@/components/ui/sheet'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Label } from '@/components/ui/label'
 
 // Enum for alert dialog reasons
 enum AlertDialogReasonEnum {
@@ -34,44 +35,50 @@ interface RowActionReducerProps {
 }
 
 export function RowActions({ row }: { row: Row<Ticket> }) {
-    const ticket = row.original;
-    const router = useRouter();
-    const [progress, setProgress] = useState(false);
-    const [inspectorListOpen, setInspectorListOpen] = useState(false);
-    const [updateSheetOpen, setUpdateSheetOpen] = useState(false);
-    const [updatedTicket, setUpdatedTicket] = useState<Partial<Ticket>>({});
+    const ticket = row.original
+    const router = useRouter()
+    const [progress, setProgress] = useState(false)
+    const [inspectorListOpen, setInspectorListOpen] = useState(false)
+    const [updateSheetOpen, setUpdateSheetOpen] = useState(false)
+    const [updatedTicket, setUpdatedTicket] = useState<Partial<Ticket>>({})
 
     const [state, setState] = useReducer((prevstate: RowActionReducerProps, params: Partial<RowActionReducerProps>) => {
-        return { ...prevstate, ...params };
+        console.log('Updating state:', params);
+        return { ...prevstate, ...params }
     }, {
         alertDialog: false,
         alertDialogReason: AlertDialogReasonEnum.NONE,
         mapDialog: false,
-    });
+    })
 
     const handleDelete = () => {
+        console.log('Handle delete clicked');
         setState({
             alertDialog: true,
             alertDialogReason: AlertDialogReasonEnum.DELETE
-        });
-    };
+        })
+    }
 
     const handleMarkComplete = () => {
+        console.log('Handle mark complete clicked');
         setState({
             alertDialog: true,
             alertDialogReason: AlertDialogReasonEnum.MARK_COMPLETE
-        });
-    };
+        })
+    }
 
     const handleConfirm = async () => {
         try {
-            setProgress(true);
+            console.log('Handle confirm started');
+            setProgress(true)
             if (state.alertDialogReason === AlertDialogReasonEnum.DELETE) {
+                console.log('Deleting ticket:', ticket.id);
                 await fetch(buildUrl(`ticket/${ticket.id}`), {
                     method: "DELETE"
                 });
-                toast.success('Ticket deleted');
+                toast.success('Ticket deleted')
             } else if (state.alertDialogReason === AlertDialogReasonEnum.MARK_COMPLETE) {
+                console.log('Marking ticket as complete:', ticket.id);
                 const response = await fetch(buildUrl(`ticket/${ticket.id}`), {
                     method: 'PATCH',
                     headers: {
@@ -80,23 +87,25 @@ export function RowActions({ row }: { row: Row<Ticket> }) {
                     body: JSON.stringify({
                         status: TicketStatus.COMPLETED
                     })
-                });
-                if (!response.ok) throw new Error('Failed to mark ticket as complete');
-                toast.success('Ticket marked as complete');
+                })
+                if (!response.ok) throw new Error('Failed to mark ticket as complete')
+                toast.success('Ticket marked as complete')
             }
             router.refresh();
         } catch (error) {
             console.error('Error in handleConfirm:', error);
-            toast.error('An error occurred. Please try again.');
+            toast.error('An error occurred. Please try again.')
         } finally {
-            setProgress(false);
-            setState({ alertDialog: false, alertDialogReason: AlertDialogReasonEnum.NONE });
+            console.log('Handle confirm finished');
+            setProgress(false)
+            setState({ alertDialog: false, alertDialogReason: AlertDialogReasonEnum.NONE })
         }
-    };
+    }
 
     const handleInspectorAssign = async (inspector: User | null): Promise<void> => {
         try {
-            setProgress(true);
+            console.log('Assigning inspector:', inspector);
+            setProgress(true)
             const response = await fetch(buildUrl(`ticket/${ticket.id}`), {
                 method: 'PATCH',
                 headers: {
@@ -109,24 +118,26 @@ export function RowActions({ row }: { row: Row<Ticket> }) {
             });
 
             if (!response.ok) {
-                throw new Error('Failed to update ticket');
+                throw new Error('Failed to update ticket')
             }
 
             const data = await response.json();
-            toast.success(inspector ? `Assigned to ${inspector.fullName}` : 'Ticket marked as assigned');
-            router.refresh();
+            toast.success(inspector ? `Assigned to ${inspector.fullName}` : 'Ticket marked as assigned')
+            router.refresh()
         } catch (error) {
-            console.error('Error in handleInspectorAssign:', error);
+            console.error('Error in handleInspectorAssign:', error)
             toast.error("Failed to update ticket");
         } finally {
-            setProgress(false);
-            setInspectorListOpen(false);
+            console.log('Inspector assignment finished');
+            setProgress(false)
+            setInspectorListOpen(false)
         }
-    };
+    }
 
     const handleUnassign = async () => {
         try {
-            setProgress(true);
+            console.log('Unassigning inspector');
+            setProgress(true)
             const response = await fetch(buildUrl(`ticket/${ticket.id}`), {
                 method: 'PATCH',
                 headers: {
@@ -139,28 +150,31 @@ export function RowActions({ row }: { row: Row<Ticket> }) {
             });
 
             if (!response.ok) {
-                throw new Error('Failed to unassign ticket');
+                throw new Error('Failed to unassign ticket')
             }
 
-            const data = await response.json();
-            toast.success(data.message);
+            const data = await response.json()
+            toast.success(data.message)
             router.refresh();
         } catch (error) {
-            console.error('Error in handleUnassign:', error);
-            toast.error("Failed to unassign ticket");
+            console.error('Error in handleUnassign:', error)
+            toast.error("Failed to unassign ticket")
         } finally {
-            setProgress(false);
+            console.log('Unassignment finished');
+            setProgress(false)
         }
-    };
+    }
 
     const handleMapview = () => {
+        console.log('Opening map view');
         setState({
             mapDialog: true
-        });
-    };
+        })
+    }
 
     const handleUpdate = async () => {
-        setProgress(true);
+        console.log('Updating ticket with data:', updatedTicket);
+        setProgress(true)
         try {
             const response = await fetch(buildUrl(`ticket/${ticket.id}`), {
                 method: 'PATCH',
@@ -168,25 +182,27 @@ export function RowActions({ row }: { row: Row<Ticket> }) {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(updatedTicket)
-            });
+            })
 
-            if (!response.ok) throw new Error('Failed to update ticket');
+            if (!response.ok) throw new Error('Failed to update ticket')
             
-            toast.success('Ticket updated successfully');
-            router.refresh();
-            setUpdateSheetOpen(false);
+            toast.success('Ticket updated successfully')
+            router.refresh()
+            setUpdateSheetOpen(false)
         } catch (error) {
-            console.error('Error updating ticket:', error);
-            toast.error("Failed to update ticket");
+            console.error('Error updating ticket:', error)
+            toast.error("Failed to update ticket")
         } finally {
-            setProgress(false);
+            console.log('Update finished');
+            setProgress(false)
         }
-    };
+    }
 
     const handleUpdateSheetOpen = () => {
-        setUpdatedTicket(ticket);
-        setUpdateSheetOpen(true);
-    };
+        console.log('Opening update sheet for ticket:', ticket);
+        setUpdatedTicket(ticket)
+        setUpdateSheetOpen(true)
+    }
 
     return (
         <>

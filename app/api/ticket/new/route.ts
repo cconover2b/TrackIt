@@ -12,28 +12,34 @@ export async function POST(request: NextRequest, response: NextResponse) {
 
         const userInfo = await request.json();
 
-        console.log("*** does this work***");
-        let downloadUrl = '';
         const submitterName = userInfo.submitterName;
         const submitterPhone = userInfo.submitterPhone;
         const submitterEmail = userInfo.submitterEmail;
         const crossroads = userInfo.Crossroads;
+        const notes = userInfo.notes;
+        // const inspector = userInfo.inspector;
+        const assignedInspector = userInfo.assignedInspector || null;
+        const status = 'new'; // Assuming the default status is 'new'
+        const photo = ''; // Assume the photo field is an empty string
+        const dateOfRequest = new Date(); // Assuming the date of request is the current date and time
+        const resolvedDate = null; // Assume the resolvedDate field is null for new tickets
+        const latlong = userInfo.latlong;
         const lat = userInfo.latlong.lat;
         const long = userInfo.latlong.long;
-        const notes = userInfo.notes;
-        const fileBase64 = userInfo.image; // Assume the image is a base64 encoded string
+        const fileBase64 = userInfo.image; // Assume the image is a base64 encoded string ***this is if we convert it
 
         let ticketToSave = {
             submitterName: submitterName,
             submitterPhone: submitterPhone,
             submitterEmail: submitterEmail,
             crossroads: crossroads,
+            notes: notes, // Use the value of notes in the ticketToSave object
             photo: '',
             latlong: {
                 coordinates: [lat, long]
             }
         };
-
+        let downloadUrl: string;
         if (fileBase64) {
             const filename = Date.now() + '.png'; // Assuming the file is a PNG image
             const ref = storageRef(`${filename}`);
@@ -49,12 +55,9 @@ export async function POST(request: NextRequest, response: NextResponse) {
 
         return NextResponse.json({
             message: "Ticket created",
-            ticket: ticketToSave
         });
     } catch (error) {
-        console.log(error);
-        return NextResponse.json({
-            message: "Something went wrong"
-        });
+        console.error("Error creating ticket:", error);
+        return new NextResponse("Internal Server Error", { status: 500 });
     }
 }
